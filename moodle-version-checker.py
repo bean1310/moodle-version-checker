@@ -7,13 +7,12 @@ def getVersion(path: str) -> str:
     result = None
     versionFilePath = path + "/version.php"
     if not os.path.isfile(versionFilePath):
-        print("Did not find version.php file in '" + path + "' .")
-        exit()
+        return result
     with open(versionFilePath) as f:
         line = f.readlines()
-        versionLine = [s for s in line if '$version' in s]
+        versionLine = [s for s in line if '$release' in s]
         for s in versionLine:
-            result = re.search(r'(\d|\.)+', s).group()
+            result = re.search(r'(\d|\.|\+)+', s).group()
     
     return result
 
@@ -40,7 +39,10 @@ def main():
 
     for moodleSystemDir in moodleDirs:
         version = getVersion(moodleSystemDir)
-        print(moodleSystemDir + "\t:" + version)
+        if version == None:
+            print(moodleSystemDir + "\t: Not Found")
+        else:
+            print(moodleSystemDir + "\t: " + version)
 
 
 if __name__ == '__main__':
