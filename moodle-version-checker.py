@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, re
+from prettytable import PrettyTable
 
 def getVersion(path: str) -> str:
     result = None
@@ -37,12 +38,17 @@ def main():
         if os.path.isdir(subDirAbsPath):
             moodleDirs.append(subDirAbsPath)
 
+    table = PrettyTable()
+    table.field_names = ['Directory', 'Version']
+    
     for moodleSystemDir in moodleDirs:
         version = getVersion(moodleSystemDir)
         if version == None:
-            print(moodleSystemDir + "\t: Not Found")
+            table.add_row([moodleSystemDir, 'Not Found'])
         else:
-            print(moodleSystemDir + "\t: " + version)
+            table.add_row([moodleSystemDir, version])
+
+    print(table.get_string())
 
 
 if __name__ == '__main__':
